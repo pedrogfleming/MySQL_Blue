@@ -69,3 +69,17 @@ SELECT * FROM unique_cats2;
 -- Table Constraints Exercise
 INSERT INTO employees(first_name, last_name, age) VALUES
 ('Dora', 'Smith', 58);
+
+-- CODE: Introduction to CRUD
+INSERT INTO cats(name, age) VALUES('Taco', 14); 
+
+INSERT INTO cats(name, breed, age) 
+VALUES ('Ringo', 'Tabby', 4),
+       ('Cindy', 'Maine Coon', 10),
+       ('Dumbledore', 'Maine Coon', 11),
+       ('Egg', 'Persian', 4),
+       ('Misty', 'Tabby', 13),
+       ('George Michael', 'Ragdoll', 9),
+       ('Jackson', 'Sphynx', 7);
+       
+SELECT * FROM cats;

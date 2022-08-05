@@ -97,3 +97,17 @@ DESC Employees;
 --     age INT NOT NULL,
 --     current_status VARCHAR(255) NOT NULL DEFAULT 'employed'
 -- );
+ 
+ 
+ -- We drop the cats table to reacrete with more columns
+DROP TABLE CATS;
+
+CREATE TABLE cats 
+  ( 
+     cat_id INT NOT NULL AUTO_INCREMENT, 
+     name   VARCHAR(100), 
+     breed  VARCHAR(100), 
+     age    INT, 
+     PRIMARY KEY (cat_id) 
+  ); 
+  DESC cats; 
