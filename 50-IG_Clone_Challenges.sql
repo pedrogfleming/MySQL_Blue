@@ -143,30 +143,30 @@ GROUP  BY likes.user_id
 HAVING num_likes = (SELECT Count(*) 
                     FROM   photos); 
 
-
--- Didn´t work
--- WITH cte_total_photos(total_posts) AS
--- (
--- 	SELECT 
--- 	count(*) AS total_posts
--- 	FROM photos
--- ),
--- cte_filter_bots(user_id,type_of_user) AS
--- (
--- 	SELECT
--- 		user_id,
--- 		CASE
--- 			WHEN COUNT(user_id) = (SELECT total_posts FROM cte_total_photos) THEN 'BOT'
--- 			ELSE
--- 			'HUMAN'
--- 		END AS type_of_user
---     FROM likes
---     GROUP BY user_id
--- )
--- SELECT 
--- user_id,
--- username,
--- type_of_user
---   FROM cte_filter_bots  
--- INNER JOIN users
--- HAVING type_of_user = 'BOT';
+-- Alternative with CTEs
+WITH cte_total_photos(total_posts) AS
+(
+	SELECT 
+	count(*) AS total_posts
+	FROM photos
+),
+cte_filter_bots(user_id,type_of_user) AS
+(
+	SELECT
+		user_id,
+		CASE
+			WHEN COUNT(user_id) = (SELECT total_posts FROM cte_total_photos) THEN 'BOT'
+			ELSE
+			'HUMAN'
+		END AS type_of_user
+    FROM likes
+    GROUP BY user_id
+)
+SELECT 
+user_id,
+username,
+type_of_user
+  FROM cte_filter_bots  
+INNER JOIN users
+ON users.id = cte_filter_bots.user_id
+HAVING type_of_user = 'BOT';
