@@ -52,3 +52,46 @@ CREATE TABLE photo_tags (
     FOREIGN KEY(tag_id) REFERENCES tags(id),
     PRIMARY KEY(photo_id, tag_id)
 );
+
+CREATE TABLE unfollows(
+    follower_id INTEGER NOT NULL,
+    followee_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY(follower_id) REFERENCES users(id),
+    FOREIGN KEY(followee_id) REFERENCES users(id),
+    PRIMARY KEY(follower_id,followee_id)                              
+);
+
+USE ig_clone;
+DESC follows;
+DELIMITER $$
+
+CREATE TRIGGER prevent_self_follows
+     BEFORE INSERT ON follows FOR EACH ROW	
+     BEGIN
+		IF NEW.follower_id = NEW.followee_id
+        THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'You cannot follow yourself!';
+        END IF;
+     END;
+$$
+DELIMITER ;
+INSERT INTO follows(follower_id,followee_id) VALUES (7,2);
+
+DELIMITER $$
+
+CREATE TRIGGER capture_unfollow
+	AFTER DELETE ON follows FOR EACH ROW
+    BEGIN
+		INSERT INTO unfollows
+        SET follower_id = OLD.follower_id,
+        followee_id = OLD.followee_id;
+    END
+$$
+
+DELIMITER ;
+
+SHOW TRIGGERS;
+
+-- DROP TRIGGER prevent_self_follows;
